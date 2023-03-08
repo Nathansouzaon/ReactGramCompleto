@@ -102,7 +102,7 @@ const update = async(req, res) => {
     const user = await User.findById(new mongoose.Types.ObjectId(reqUser._id)).select("-password");//esse id do usuario vem da onde? por causa do token
 
     if(name){
-        user.name = name;
+        user.name = name
     }
 
     if(password){
@@ -116,11 +116,11 @@ const update = async(req, res) => {
     }
     
     if(profileImage){
-        user.profileImage = profileImage;
+        user.profileImage = profileImage
     }
 
     if(bio){
-        user.bio = bio;
+        user.bio = bio
     }
 
     //salvar esses objetos no banco
