@@ -207,7 +207,7 @@ const insertPhoto = async(req, res) => {
 
         res.status(200).json({
             comment: userComment,
-            messagge: "O comentário foi adicionado com sucesso!"
+            message: "O comentário foi adicionado com sucesso!"
         })
     
     }

@@ -24,7 +24,9 @@ import { logout, reset } from '../slices/authSlice';
 
 const Navbar = () => { 
     const {auth} = useAuth();
-    const {user} = useSelector((state) => state.auth);//dados do user 
+    const {user} = useSelector((state) => state.auth);//dados do user  
+
+    const [query, setQuery] = useState("");
 
 
     const navigate = useNavigate();
@@ -37,14 +39,23 @@ const Navbar = () => {
       dispatch(reset()) 
 
       navigate("/login");
+    } 
+
+    const handleSearch = (e) => {
+      e.preventDefault(); 
+
+      if(query){
+         return navigate(`/search?q=${query}`)
+      }
+
     }
 
   return (
     <nav className="" id="nav"> 
       <Link to="/">ReactGram</Link> 
-      <form id="search-form"> 
+      <form id="search-form" onSubmit={handleSearch}> 
          <BsSearch/> 
-         <input type="text" />
+         <input type="text" onChange={(e) => setQuery(e.target.value)} value={query}/>
       </form>
       <ul className="" id="nav-links">
            

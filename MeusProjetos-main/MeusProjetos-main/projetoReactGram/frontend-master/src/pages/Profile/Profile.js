@@ -15,7 +15,8 @@ import { BsFillEyeFill, BsPencilFill, BsXLg } from 'react-icons/bs';
 
  //redux
  import { getUserDetails } from '../../slices/userSlice';
- import { publishPhoto, resetMessage, getUserPhotos, deletePhoto, updatePhoto } from '../../slices/photoSlice';
+ import { publishPhoto, getUserPhotos, deletePhoto, updatePhoto } from '../../slices/photoSlice';
+import { useResetComponentMessage } from '../../hooks/useResetComponentMessage';
 
 
 const Profile = () => { 
@@ -23,7 +24,9 @@ const Profile = () => {
     const {id} = useParams();
 
     //com dispatch eu posso usar as funções de chamar dados
-    const dispatch = useDispatch();
+    const dispatch = useDispatch(); 
+
+    const resetMessage = useResetComponentMessage(dispatch);
 
     const {user, loading} = useSelector((state) => state.user);
     const {user:userAuth} = useSelector((state) => state.auth); 
@@ -66,12 +69,6 @@ const Profile = () => {
         setImage(image);
 
     } 
-
-    const resetComponentMessage = () => {
-        setTimeout(() => {
-            dispatch(resetMessage())
-        }, 2000);
-    }
  
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -96,7 +93,7 @@ const Profile = () => {
 
         setTitle(""); 
         
-        resetComponentMessage();
+        resetMessage();
     }
 
     //delete a photo
@@ -106,7 +103,7 @@ const Profile = () => {
         dispatch(deletePhoto(id));
 
 
-        resetComponentMessage();
+        resetMessage();
     }; 
 
     //show or hide forms
@@ -124,7 +121,7 @@ const Profile = () => {
         }
         dispatch(updatePhoto(photoData)); 
 
-        resetComponentMessage();
+        resetMessage();
     } 
 
     const handleEdit = (photo) => {

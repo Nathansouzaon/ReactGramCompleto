@@ -112,8 +112,60 @@ export const like = createAsyncThunk(
 
             return data;
     })
-    
 
+    //add comment to a photo
+
+    export const comment = createAsyncThunk(
+        "photo/comment", 
+        async(commentData, thunkAPI) => {
+
+         const token = thunkAPI.getState().auth.user.token;
+
+         const data = await photoService.comment(
+            {comment: commentData.comment}, 
+            commentData.id, 
+            token 
+        ) 
+
+            //check for erros 
+            if(data.errors) {
+                return thunkAPI.rejectWithValue(data.errors[0]);
+            }  
+
+        return data;
+    }) 
+    
+    //get all photos 
+
+export const getPhotos = createAsyncThunk(
+    "photo/getall", 
+    async(_, thunkAPI) => {
+
+        const token = thunkAPI.getState().auth.user.token;
+
+        const data = await photoService.getPhotos(token);
+
+        return data;
+    }
+) 
+
+//search photo by title 
+
+export const searchPhotos = createAsyncThunk(
+    "photo/search",
+    async(query, thunkAPI) => {
+        const token = thunkAPI.getState().auth.user.token; 
+
+        const data = await photoService.searchPhotos(query, token);
+
+        //check for erros 
+        if(data.errors) {
+            return thunkAPI.rejectWithValue(data.errors[0]);
+        } 
+
+        return data;
+    }
+)
 
 export const photoSlice = createSlice({
     name: "photo",
@@ -121,6 +173,7 @@ export const photoSlice = createSlice({
     reducers: {
         resetMessage: (state) => {
             state.message = null;
+            state.error = null;
         },
     },
     extraReducers: (builder) => {
@@ -212,6 +265,32 @@ export const photoSlice = createSlice({
         }).addCase(like.rejected, (state, action)=>{
             state.loading = false;
             state.error = action.payload;
+        }).addCase(comment.fulfilled, (state, action)=>{
+            state.loading = false;
+            state.success = true;
+            state.error = null; 
+            state.photo.comments.push(action.payload.comment);
+            state.message = action.payload.message;//mensage que vem da api
+
+        }).addCase(comment.rejected, (state, action)=>{
+            state.loading = false;
+            state.error = action.payload;
+        }).addCase(getPhotos.pending, (state) => {
+            state.loading = true;
+            state.error = false;
+        }).addCase(getPhotos.fulfilled, (state, action)=>{
+            state.loading = false;
+            state.success = true;
+            state.error = null;
+            state.photos = action.payload;
+        }).addCase(searchPhotos.pending, (state) => {
+            state.loading = true;
+            state.error = false;
+        }).addCase(searchPhotos.fulfilled, (state, action)=>{
+            state.loading = false;
+            state.success = true;
+            state.error = null;
+            state.photos = action.payload;
         });
     },
 });

@@ -1,3 +1,4 @@
+
 import { api, requestConfig} from '../utils/config';
 //função que cria a imagem no sistema acessa minha api e manda os dados da foto e vai registrar a foto la  
 
@@ -109,6 +110,65 @@ const like = async(id, token) => {
         console.log(error);
     }
 }
+ 
+
+// add comments to a photo 
+
+const comment = async(data, id, token) => {
+
+    const config = requestConfig("PUT", data, token);
+
+    try {
+        
+        const res = await fetch(api + "/photos/comment/" + id, config)
+                    .then((res) => res.json())
+                    .catch((err) => err) 
+
+        return res;
+    } catch (error) {
+        console.log(error);
+    }
+} 
+
+
+//get all photos 
+
+const getPhotos = async(token) => {
+
+    const config = requestConfig("GET", null, token);
+
+    try {
+        
+        const res = await fetch(api + "/photos", config) 
+                    .then((res) => res.json())
+                    .catch((err) => err)
+
+            return res;
+
+    } catch (error) {
+        console.log(error);
+    }
+} 
+
+
+//search photos by title
+const searchPhotos = async(query, token) => {
+
+    const config = requestConfig("GET", null, token); 
+
+    try {
+        
+        const res = await fetch(api + "/photos/search?q=" + query, config)
+                    .then((res) => res.json())
+                    .catch((err) => err)
+        
+        return res;
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 
 
 
@@ -120,6 +180,9 @@ const photoService = {
     updatePhoto,
     getPhoto,
     like,
+    comment,
+    getPhotos,
+    searchPhotos,
 }; 
 
 
